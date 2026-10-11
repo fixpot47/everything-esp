@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.18-SNAPSHOT'
+    id 'fabric-loom' version '1.17-SNAPSHOT'
     id 'maven-publish'
 }
 version = project.mod_version
@@ -15,5 +15,4 @@ processResources {
     inputs.property "version", project.version
     filesMatching("fabric.mod.json") { expand "version": inputs.properties.version }
 }
-tasks.withType(JavaCompile).configureEach { options.release = 21 }
 java { withSourcesJar() }
