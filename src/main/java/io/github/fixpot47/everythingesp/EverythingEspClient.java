@@ -16,6 +16,7 @@ public final class EverythingEspClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        new BlockEspRenderer().onInitializeClient();
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             EntityEsp.tick(client);
             while (OPEN_MENU.consumeClick()) {
