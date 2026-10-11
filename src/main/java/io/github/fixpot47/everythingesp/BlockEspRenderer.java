@@ -49,7 +49,15 @@ public class BlockEspRenderer implements ClientModInitializer {
 	// #endregion custom_pipelines_define_pipeline
 	// #region custom_pipelines_extraction_phase
 	private List<WaypointRenderState> waypointStates = List.of();
-	private long lastScan = 0;
+	private static final int RADIUS = 300;
+	private static final int WIDTH = RADIUS * 2 + 1;
+	private static final long TOTAL = (long) WIDTH * WIDTH * WIDTH;
+	private static final int BLOCKS_PER_FRAME = 32000;
+	private long scanCursor = 0;
+	private BlockPos scanOrigin;
+	private Object scanLevel;
+	private java.util.Set<String> scanTargets = java.util.Set.of();
+	private final List<WaypointRenderState> working = new ArrayList<>();
 
 	// #endregion custom_pipelines_extraction_phase
 	// #region custom_pipelines_drawing_phase
@@ -70,32 +78,48 @@ public class BlockEspRenderer implements ClientModInitializer {
 	private void extractWaypoint(LevelExtractionContext context) {
 		var client = Minecraft.getInstance();
 		if (client.player == null || client.level == null || !TargetList.enabled || TargetList.TARGETS.isEmpty()) {
-			this.waypointStates = List.of();
+			waypointStates = List.of();
+			working.clear();
+			scanOrigin = null;
 			return;
 		}
-		long now = System.nanoTime();
-		if (now - lastScan < 1_000_000_000L) return;
-		lastScan = now;
-		var found = new ArrayList<WaypointRenderState>();
-		var p = client.player.blockPosition();
-		var cursor = new BlockPos.MutableBlockPos();
-		for (int dx = -40; dx <= 40; dx++) {
-			for (int dz = -40; dz <= 40; dz++) {
-				for (int dy = -40; dy <= 40; dy++) {
-					cursor.set(p.getX() + dx, p.getY() + dy, p.getZ() + dz);
-					if (!client.level.hasChunkAt(cursor)) continue;
-					var state = client.level.getBlockState(cursor);
-					if (TargetList.TARGETS.contains(BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString())) {
-						found.add(new WaypointRenderState(cursor.getX(), cursor.getY(), cursor.getZ(), 0f, 1f, 0.25f, 0.35f));
-						if (found.size() >= 512) {
-							this.waypointStates = List.copyOf(found);
-							return;
-						}
-					}
+		var origin = client.player.blockPosition();
+		if (scanOrigin == null || scanOrigin.distSqr(origin) > 64 * 64 ||
+				scanLevel != client.level || !scanTargets.equals(TargetList.TARGETS)) {
+			scanOrigin = origin.immutable();
+			scanLevel = client.level;
+			scanTargets = java.util.Set.copyOf(TargetList.TARGETS);
+			scanCursor = 0;
+			working.clear();
+			waypointStates = List.of();
+		}
+
+		var mutable = new BlockPos.MutableBlockPos();
+		int checked = 0;
+		while (checked < BLOCKS_PER_FRAME && scanCursor < TOTAL) {
+			long index = scanCursor++;
+			int dx = (int) (index % WIDTH) - RADIUS;
+			int dz = (int) ((index / WIDTH) % WIDTH) - RADIUS;
+			int dy = (int) (index / ((long) WIDTH * WIDTH)) - RADIUS;
+			int y = scanOrigin.getY() + dy;
+			checked++;
+			if (y < client.level.getMinY() || y >= client.level.getMaxY()) continue;
+			mutable.set(scanOrigin.getX() + dx, y, scanOrigin.getZ() + dz);
+			if (!client.level.hasChunkAt(mutable)) continue;
+			var block = client.level.getBlockState(mutable).getBlock();
+			if (scanTargets.contains(BuiltInRegistries.BLOCK.getKey(block).toString())) {
+				if (working.size() < 4096) {
+					working.add(new WaypointRenderState(mutable.getX(), mutable.getY(), mutable.getZ(),
+						0f, 1f, 0.25f, 0.35f));
 				}
 			}
 		}
-		this.waypointStates = List.copyOf(found);
+		waypointStates = List.copyOf(working);
+		if (scanCursor >= TOTAL) {
+			// Repeat the scan to pick up blocks added or removed after the previous pass.
+			scanCursor = 0;
+			working.clear();
+		}
 	}
 
 	// #endregion custom_pipelines_extraction_phase
