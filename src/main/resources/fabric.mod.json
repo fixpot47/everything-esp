@@ -3,7 +3,7 @@
   "id": "everythingesp",
   "version": "${version}",
   "name": "EverythingESP",
-  "description": "Track selected items, blocks and entities with ESP.",
+  "description": "A configurable client-side ESP tracker.",
   "authors": ["fixpot47"],
   "environment": "client",
   "entrypoints": {
@@ -12,7 +12,7 @@
   "depends": {
     "fabricloader": ">=0.19.3",
     "minecraft": "26.2",
-    "java": ">=21",
+    "java": ">=25",
     "fabric-api": "*"
   }
 }
