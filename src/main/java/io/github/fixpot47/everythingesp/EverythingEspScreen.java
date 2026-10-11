@@ -26,11 +26,13 @@ public final class EverythingEspScreen extends Screen {
         }).bounds(x, y + 28, 105, 20).build());
         addRenderableWidget(Button.builder(Component.literal("Clear list"), b -> {
             TargetList.TARGETS.clear();
+            TargetList.save();
             status = "Target list cleared";
         }).bounds(x + 115, y + 28, 105, 20).build());
         addRenderableWidget(Button.builder(
             Component.literal(TargetList.enabled ? "ESP: ON" : "ESP: OFF"), b -> {
                 TargetList.enabled = !TargetList.enabled;
+                TargetList.save();
                 b.setMessage(Component.literal(TargetList.enabled ? "ESP: ON" : "ESP: OFF"));
             }).bounds(x, y + 55, 105, 20).build());
         addRenderableWidget(Button.builder(Component.literal("Done"), b -> onClose())
@@ -42,13 +44,13 @@ public final class EverythingEspScreen extends Screen {
         super.extractRenderState(graphics, mouseX, mouseY, delta);
         int x = width / 2 - 110;
         int y = height / 2 - 60;
-        graphics.text(font, "EverythingESP 0.1.0-alpha", x, y - 32, 0xFFFFFFFF, true);
+        graphics.text(font, "EverythingESP 1.0.0", x, y - 32, 0xFFFFFFFF, true);
         graphics.text(font, status, x, y + 85, 0xFFAAAAAA, false);
         String targets = String.join(", ", TargetList.TARGETS);
         if (targets.length() > 42) targets = targets.substring(0, 39) + "...";
         graphics.text(font, "Targets: " + (targets.isEmpty() ? "(none)" : targets),
             x, y + 102, 0xFFFFFFFF, false);
-        graphics.text(font, "Block ESP not yet implemented", x, y + 118, 0xFFFFAA55, false);
+        graphics.text(font, "Block ESP enabled in loaded area", x, y + 118, 0xFFFFAA55, false);
     }
 
     @Override
