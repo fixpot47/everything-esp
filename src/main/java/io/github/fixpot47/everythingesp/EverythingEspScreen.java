@@ -48,7 +48,7 @@ public final class EverythingEspScreen extends Screen {
         if (targets.length() > 42) targets = targets.substring(0, 39) + "...";
         graphics.text(font, "Targets: " + (targets.isEmpty() ? "(none)" : targets),
             x, y + 102, 0xFFFFFFFF, false);
-        graphics.text(font, "ESP renderer not implemented yet", x, y + 118, 0xFFFFAA55, false);
+        graphics.text(font, "Block ESP not yet implemented", x, y + 118, 0xFFFFAA55, false);
     }
 
     @Override
