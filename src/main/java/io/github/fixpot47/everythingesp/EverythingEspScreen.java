@@ -44,7 +44,7 @@ public final class EverythingEspScreen extends Screen {
         super.extractRenderState(graphics, mouseX, mouseY, delta);
         int x = width / 2 - 110;
         int y = height / 2 - 60;
-        graphics.text(font, "EverythingESP 1.0.0", x, y - 32, 0xFFFFFFFF, true);
+        graphics.text(font, "EverythingESP " + net.fabricmc.loader.api.FabricLoader.getInstance().getModContainer("everythingesp").map(m -> m.getMetadata().getVersion().getFriendlyString()).orElse("?"), x, y - 32, 0xFFFFFFFF, true);
         graphics.text(font, status, x, y + 85, 0xFFAAAAAA, false);
         String targets = String.join(", ", TargetList.TARGETS);
         if (targets.length() > 42) targets = targets.substring(0, 39) + "...";
