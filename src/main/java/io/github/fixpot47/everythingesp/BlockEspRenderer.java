@@ -74,14 +74,14 @@ public class BlockEspRenderer implements ClientModInitializer {
 			return;
 		}
 		long now = System.nanoTime();
-		if (now - lastScan < 350_000_000L) return;
+		if (now - lastScan < 1_000_000_000L) return;
 		lastScan = now;
 		var found = new ArrayList<WaypointRenderState>();
 		var p = client.player.blockPosition();
 		var cursor = new BlockPos.MutableBlockPos();
-		for (int dx = -16; dx <= 16; dx++) {
-			for (int dz = -16; dz <= 16; dz++) {
-				for (int dy = -16; dy <= 16; dy++) {
+		for (int dx = -40; dx <= 40; dx++) {
+			for (int dz = -40; dz <= 40; dz++) {
+				for (int dy = -40; dy <= 40; dy++) {
 					cursor.set(p.getX() + dx, p.getY() + dy, p.getZ() + dz);
 					if (!client.level.hasChunkAt(cursor)) continue;
 					var state = client.level.getBlockState(cursor);
