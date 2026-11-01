@@ -1,7 +1,7 @@
-name: Build EverythingESP
+name: Build Flame Highlight 26.2
 on:
   push:
-    branches: [main]
+    branches: [flame-highlight-fabric-26.2]
   workflow_dispatch:
 jobs:
   build:
@@ -15,11 +15,11 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '9.5.1'
-      - name: Build jar
+      - name: Compile Fabric jar
         run: gradle build --stacktrace
       - uses: actions/upload-artifact@v4
         if: success()
         with:
-          name: EverythingESP-26.2
-          path: build/libs/*.jar
+          name: Flame-Highlight-26.2-Fabric-JAR
+          path: build/libs/flame-highlight-26.2-fabric-1.0.0.jar
           if-no-files-found: error

@@ -1,18 +1,25 @@
 {
   "schemaVersion": 1,
-  "id": "everythingesp",
+  "id": "flamehighlight",
   "version": "${version}",
-  "name": "EverythingESP",
-  "description": "A configurable client-side ESP tracker.",
+  "name": "Flame Highlight",
+  "description": "Highlights the small orange flame particles with brighter, larger sprites. Configurable from Mod Menu.",
   "authors": ["fixpot47"],
   "environment": "client",
   "entrypoints": {
-    "client": ["io.github.fixpot47.everythingesp.EverythingEspClient"]
+    "client": ["io.github.fixpot47.flamehighlight.FlameHighlightClient"],
+    "modmenu": ["io.github.fixpot47.flamehighlight.ModMenuIntegration"]
   },
+  "mixins": ["flamehighlight.mixins.json"],
   "depends": {
     "fabricloader": ">=0.19.3",
     "minecraft": "26.2",
-    "java": ">=25",
-    "fabric-api": "*"
+    "java": ">=25"
+  },
+  "suggests": {
+    "modmenu": ">=20.0.0"
+  },
+  "custom": {
+    "modmenu": { "update_checker": false }
   }
 }

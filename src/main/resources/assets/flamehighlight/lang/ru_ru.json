@@ -1,0 +1,7 @@
+{
+  "flamehighlight.title": "Подсветка частиц огня",
+  "flamehighlight.enabled": "Подсветка: ВКЛ",
+  "flamehighlight.disabled": "Подсветка: ВЫКЛ",
+  "flamehighlight.explanation": "Только оранжевое пламя. Остальные частицы не изменяются.",
+  "flamehighlight.done": "Готово"
+}

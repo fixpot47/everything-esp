@@ -1,19 +1,33 @@
 plugins {
-    id 'net.fabricmc.fabric-loom' version '1.16.2'
+    id 'net.fabricmc.fabric-loom' version '1.17.17'
     id 'maven-publish'
 }
-version = project.mod_version
+
 group = project.maven_group
+version = project.mod_version
 base { archivesName = project.archives_base_name }
-repositories { mavenCentral() }
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://maven.terraformersmc.com/' }
+}
+
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
 }
+
 processResources {
-    inputs.property "version", project.version
-    filesMatching("fabric.mod.json") { expand "version": inputs.properties.version }
+    inputs.property 'version', project.version
+    filesMatching('fabric.mod.json') {
+        expand 'version': inputs.properties.version
+    }
 }
-tasks.withType(JavaCompile).configureEach { options.release = 25 }
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 25
+    options.encoding = 'UTF-8'
+}
+
 java { withSourcesJar() }

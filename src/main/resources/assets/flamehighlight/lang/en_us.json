@@ -1,0 +1,7 @@
+{
+  "flamehighlight.title": "Flame Highlight",
+  "flamehighlight.enabled": "Highlight: ON",
+  "flamehighlight.disabled": "Highlight: OFF",
+  "flamehighlight.explanation": "Only orange flame particles. Other particles are not affected.",
+  "flamehighlight.done": "Done"
+}
